@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "831345837070",
+    "project_id": "kovalskia-firebase",
+    "storage_bucket": "kovalskia-firebase.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:831345837070:android:7f5588216e8a8f168b285f",
+        "android_client_info": {
+          "package_name": "com.example.kovalskia"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJJEyrmGQGvxrTG3yG4L1s4T0uQWx6qaw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
