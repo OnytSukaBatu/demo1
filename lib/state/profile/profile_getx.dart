@@ -4,11 +4,13 @@ import 'package:get_storage/get_storage.dart';
 import 'package:kovalskia/main/config.dart';
 import 'package:kovalskia/main/model/user_model.dart';
 import 'package:kovalskia/state/edit_profile/edit_profile_page.dart';
+import 'package:kovalskia/state/image/image_page.dart';
+import 'package:kovalskia/state/post/post_page.dart';
 
 class ProfileGetx extends GetxController {
   GetStorage box = GetStorage();
 
-  late Rx<User> user;
+  late Rx<User> user = User.fromJson(box.read(Config.user)).obs;
 
   @override
   void onInit() {
@@ -32,4 +34,8 @@ class ProfileGetx extends GetxController {
     user.value = User.fromJson(userData);
     user.refresh();
   }
+
+  void post() => Get.to(() => PostPage());
+
+  void viewImage() => Get.to(() => ImagePage(), arguments: user.value.profile);
 }

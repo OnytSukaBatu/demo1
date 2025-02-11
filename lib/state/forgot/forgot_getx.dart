@@ -9,12 +9,10 @@ import 'package:kovalskia/main/main_function.dart';
 class ForgotGetx extends GetxController {
   TextEditingController email = TextEditingController(), otp = TextEditingController(), password = TextEditingController(), confirm = TextEditingController();
 
-  RxInt phase = 0.obs;
-
   RxString time = ''.obs;
-  int timer = 300;
-
+  RxInt phase = 0.obs;
   String userID = '';
+  int timer = 300;
 
   late Timer otpKadaluarsa;
 
@@ -26,15 +24,23 @@ class ForgotGetx extends GetxController {
   }
 
   void lanjut() async {
+    if (timer == 0) {
+      C.bottomSheetEla(subtitle: 'OTP Kadaluarsa!');
+      return;
+    }
+
+    C.loading();
     switch (phase.value) {
       case 0:
         if (!email.text.contains('@gmail.com')) {
+          Get.back();
           C.bottomSheetEla(subtitle: '${email.text} tidak ditemukan!');
           break;
         }
 
         final snapshot = await FirebaseFirestore.instance.collection('user').where('email', isEqualTo: email.text).get();
         if (snapshot.docs.isEmpty) {
+          Get.back();
           C.bottomSheetEla(subtitle: '${email.text} tidak terdaftar!');
           break;
         }
@@ -44,10 +50,13 @@ class ForgotGetx extends GetxController {
         startTime();
         email.clear();
         phase.value = 1;
+        Get.back();
+        break;
       case 1:
         bool verify = EmailOTP.verifyOTP(otp: otp.text);
 
         if (!verify) {
+          Get.back();
           C.bottomSheetEla(subtitle: 'Kode OTP salah!');
           break;
         }
@@ -55,8 +64,11 @@ class ForgotGetx extends GetxController {
         otp.clear();
         otpKadaluarsa.cancel();
         phase.value = 2;
+        Get.back();
+        break;
       case 2:
         if (password.text != confirm.text) {
+          Get.back();
           C.bottomSheetEla(subtitle: 'Password Tidak Sama!');
           break;
         }
@@ -68,7 +80,7 @@ class ForgotGetx extends GetxController {
 
         password.clear();
         confirm.clear();
-        Get.back();
+        Get.close(2);
         C.bottomSheetEla(
           title: 'Password Berhasil Dirubah',
           subtitle: 'Silahkan Login Dengan Password Baru',

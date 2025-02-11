@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kovalskia/state/content/content_getx.dart';
 
 class ContentPage extends StatelessWidget {
-  const ContentPage({super.key});
+  ContentPage({super.key});
+
+  final ContentGetx get = Get.put(ContentGetx());
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +25,12 @@ class ContentPage extends StatelessWidget {
             icon: Icon(Icons.email),
           ),
         ],
+      ),
+      body: IconButton(
+        onPressed: get.init,
+        icon: Icon(
+          Icons.refresh,
+        ),
       ),
     );
   }

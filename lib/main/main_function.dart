@@ -29,6 +29,7 @@ class MainFunction {
     bool showEla = true,
   }) {
     Get.bottomSheet(
+      isDismissible: false,
       Container(
         height: height + 100,
         width: Get.width,
@@ -75,7 +76,10 @@ class MainFunction {
                       onPressed: Get.back,
                       backgroundColor: Colors.black,
                       borderRadius: BorderRadius.circular(5),
-                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      padding: EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 10,
+                      ),
                       child: W.text(
                         text: 'Mengerti!',
                         color: Colors.white,
@@ -88,7 +92,38 @@ class MainFunction {
           ],
         ),
       ),
-      isDismissible: false,
+    );
+  }
+
+  void loading() {
+    Get.dialog(
+      Dialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 16,
+          ),
+          child: Column(
+            mainAxisSize: Ms.min,
+            mainAxisAlignment: Ma.center,
+            children: [
+              Image.asset(
+                Img.okayu,
+                scale: 2,
+              ),
+              W.gap(height: 5),
+              W.text(
+                text: 'Tunggu Sebentar',
+                fontWeight: FontWeight.bold,
+              ),
+              W.gap(height: 16),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

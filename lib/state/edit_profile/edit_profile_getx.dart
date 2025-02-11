@@ -16,11 +16,10 @@ import 'package:permission_handler/permission_handler.dart';
 
 class EditProfileGetx extends GetxController {
   GetStorage box = GetStorage();
+
   late User user = User.fromJson(box.read(Config.user));
-
-  late RxString profile = user.profile.obs;
-
   late TextEditingController username = TextEditingController(text: user.username), desc = TextEditingController(text: user.desc);
+  late RxString profile = user.profile.obs;
 
   void pickImage(ImageSource imageSource) async {
     PermissionStatus status = await Permission.storage.status;
@@ -138,10 +137,13 @@ class EditProfileGetx extends GetxController {
   }
 
   void save() async {
+    C.loading();
+
     String userID = '';
 
     final snapshot = await FirebaseFirestore.instance.collection('user').where('email', isEqualTo: user.email).get();
     if (snapshot.docs.isEmpty) {
+      Get.back();
       C.bottomSheetEla(subtitle: '${user.email} tidak terdaftar!');
       return;
     }
@@ -152,6 +154,7 @@ class EditProfileGetx extends GetxController {
       'profile': profile.value,
     });
 
+    Get.close(1);
     Get.back(result: true);
   }
 }

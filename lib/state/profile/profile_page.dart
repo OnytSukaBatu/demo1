@@ -25,11 +25,21 @@ class ProfilePage extends StatelessWidget {
             text: get.user.value.email,
             fontSize: 16,
             fontWeight: FontWeight.w600,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: get.post,
+            icon: Icon(
+              Icons.add_box,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              GetStorage().remove(Config.user);
+              Get.offAll(() => LoginPage());
+            },
             icon: Icon(
               Icons.menu,
             ),
@@ -55,10 +65,13 @@ class ProfilePage extends StatelessWidget {
                           radius: 32,
                           backgroundColor: Colors.grey[200],
                           child: get.user.value.profile.isNotEmpty
-                              ? ClipOval(
-                                  child: Image.memory(
-                                    base64Decode(get.user.value.profile),
-                                    fit: BoxFit.cover,
+                              ? GestureDetector(
+                                  onTap: get.viewImage,
+                                  child: ClipOval(
+                                    child: Image.memory(
+                                      base64Decode(get.user.value.profile),
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 )
                               : Icon(
@@ -137,7 +150,7 @@ class ProfilePage extends StatelessWidget {
                           onPressed: get.editProfile,
                           backgroundColor: Colors.grey[900],
                           borderRadius: BorderRadius.circular(5),
-                          padding: EdgeInsets.symmetric(vertical: 8),
+                          padding: EdgeInsets.symmetric(vertical: 10),
                           child: W.text(
                             text: 'Edit Profile',
                             fontSize: 12,
@@ -146,20 +159,14 @@ class ProfilePage extends StatelessWidget {
                         ),
                       ),
                       W.gap(width: 8),
-                      Expanded(
-                        child: W.button(
-                          onPressed: () {
-                            GetStorage().remove(Config.user);
-                            Get.offAll(() => LoginPage());
-                          },
-                          backgroundColor: Colors.grey[900],
-                          borderRadius: BorderRadius.circular(5),
-                          padding: EdgeInsets.symmetric(vertical: 8),
-                          child: W.text(
-                            text: 'Bagikan Profile',
-                            fontSize: 12,
-                            color: Colors.white,
-                          ),
+                      W.button(
+                        onPressed: () {},
+                        backgroundColor: Colors.grey[900],
+                        borderRadius: BorderRadius.circular(5),
+                        padding: EdgeInsets.all(8),
+                        child: Icon(
+                          Icons.qr_code,
+                          color: Colors.white,
                         ),
                       ),
                     ],
@@ -167,6 +174,10 @@ class ProfilePage extends StatelessWidget {
                 ],
               ),
             ),
+          ),
+          Divider(
+            height: 1,
+            color: Colors.black,
           ),
         ],
       ),

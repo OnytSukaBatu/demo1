@@ -20,11 +20,18 @@ class HomePage extends StatelessWidget {
           onTap: get.navigate,
           showSelectedLabels: false,
           showUnselectedLabels: false,
-          selectedItemColor: Colors.black,
-          unselectedItemColor: Colors.grey,
+          selectedItemColor: Colors.grey,
+          unselectedItemColor: Colors.black,
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
+              label: '',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.add_box,
+                color: Colors.black,
+              ),
               label: '',
             ),
             BottomNavigationBarItem(

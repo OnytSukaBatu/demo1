@@ -18,6 +18,8 @@ class LoginGetx extends GetxController {
   void lupaPassword() => Get.to(() => ForgotPage(), arguments: false);
 
   void login() async {
+    C.loading();
+
     final firestore = FirebaseFirestore.instance;
     QuerySnapshot<Map<String, dynamic>>? usernameQuerySnapshot;
 
@@ -27,17 +29,22 @@ class LoginGetx extends GetxController {
       usernameQuerySnapshot = await firestore.collection('user').where('username', isEqualTo: main.text).get();
     }
 
-    if (usernameQuerySnapshot.docs.isNotEmpty) {
-      User user = User.fromJson(usernameQuerySnapshot.docs.first.data());
-      String md5password = C.stringMD5(value: password.text);
-      if (user.password == md5password) {
-        box.write(Config.user, user);
-        Get.offAll(() => HomePage());
-      } else {
-        C.bottomSheetEla(subtitle: 'Password salah!');
-      }
-    } else {
+    if (usernameQuerySnapshot.docs.isEmpty) {
+      Get.back();
       C.bottomSheetEla(subtitle: '${main.text} tidak ditemukan!');
+      return;
     }
+
+    User user = User.fromJson(usernameQuerySnapshot.docs.first.data());
+    String md5password = C.stringMD5(value: password.text);
+
+    if (user.password != md5password) {
+      Get.back();
+      C.bottomSheetEla(subtitle: 'Password salah!');
+      return;
+    }
+
+    box.write(Config.user, user.toJson());
+    Get.offAll(() => HomePage());
   }
 }

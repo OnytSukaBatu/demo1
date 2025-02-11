@@ -16,9 +16,8 @@ class OtpGetx extends GetxController {
   TextEditingController controller = TextEditingController();
 
   User user = Get.arguments;
-  int timer = 300;
-
   RxString time = '5:00'.obs;
+  int timer = 300;
 
   late Timer otpKadaluarsa;
 
@@ -57,12 +56,14 @@ class OtpGetx extends GetxController {
   }
 
   void clear() async {
+    C.loading();
     Map<String, dynamic> data = user.toJson();
 
     final firestore = FirebaseFirestore.instance;
     await firestore.collection('user').add(data);
 
-    box.write(Config.user, user);
+    box.write(Config.user, data);
+    Get.back();
     Get.offAll(() => HomePage());
   }
 

@@ -10,6 +10,7 @@ import 'package:kovalskia/state/otp/otp_page.dart';
 
 class RegisterGetx extends GetxController {
   GetStorage box = GetStorage();
+
   TextEditingController username = TextEditingController(),
       email = TextEditingController(),
       password = TextEditingController(),
@@ -18,24 +19,30 @@ class RegisterGetx extends GetxController {
   void login() => Get.off(() => LoginPage());
 
   void register() async {
+    C.loading();
+
     final firestore = FirebaseFirestore.instance;
 
     if (username.text.length < 3) {
+      Get.back();
       C.bottomSheetEla(subtitle: 'Username Minimal 3 Karakter');
       return;
     }
 
     if (!email.text.contains('@gmail.com')) {
+      Get.back();
       C.bottomSheetEla(subtitle: 'Email Tidak Valid');
       return;
     }
 
     if (password.text.isEmpty) {
+      Get.back();
       C.bottomSheetEla(subtitle: 'Password Masih Kosong');
       return;
     }
 
     if (password.text != confirm.text) {
+      Get.back();
       C.bottomSheetEla(subtitle: 'Password Tidak Sama');
       return;
     }
@@ -43,6 +50,7 @@ class RegisterGetx extends GetxController {
     final emailQuerySnapshot = await firestore.collection('user').where('email', isEqualTo: email.text).get();
 
     if (emailQuerySnapshot.docs.isNotEmpty) {
+      Get.back();
       C.bottomSheetEla(subtitle: 'Email telah digunakan');
       return;
     }
@@ -50,6 +58,7 @@ class RegisterGetx extends GetxController {
     final usernameQuerySnapshot = await firestore.collection('user').where('username', isEqualTo: username.text).get();
 
     if (usernameQuerySnapshot.docs.isNotEmpty) {
+      Get.back();
       C.bottomSheetEla(subtitle: 'Username telah digunakan');
       return;
     }
@@ -67,6 +76,7 @@ class RegisterGetx extends GetxController {
     );
 
     EmailOTP.sendOTP(email: arguments.email);
+    Get.back();
     Get.to(() => OtpPage(), arguments: arguments);
   }
 }
