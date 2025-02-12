@@ -33,9 +33,7 @@ class ImagePage extends StatelessWidget {
       body: Center(
         child: PhotoView(
           imageProvider: MemoryImage(
-            base64Decode(
-              get.imagePath,
-            ),
+            base64Decode(get.imagePath),
           ),
         ),
       ),

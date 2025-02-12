@@ -28,11 +28,12 @@ class ProfileGetx extends GetxController {
     });
   }
 
-  void init() async {
+  Future<void> init() async {
     await Future.delayed(const Duration(microseconds: 1));
     Map<String, dynamic> userData = box.read(Config.user);
     user.value = User.fromJson(userData);
     user.refresh();
+    return;
   }
 
   void post() => Get.to(() => PostPage());

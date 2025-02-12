@@ -52,8 +52,8 @@ class PostGetx extends GetxController {
 
     final ImagePicker picker = ImagePicker();
     final List<XFile?> image = await picker.pickMultiImage(
-      limit: 5,
-      imageQuality: 75,
+      limit: 9,
+      imageQuality: 10,
     );
 
     if (image.isNotEmpty) {
@@ -81,22 +81,17 @@ class PostGetx extends GetxController {
       username: u.username,
       email: u.email,
       profile: u.profile,
-      imageList: imageList,
+      image: imageList,
       desc: desc.text,
-      date: DateTime.now().toString(),
+      date: Timestamp.fromDate(DateTime.now()),
       like: [],
     );
 
-    // Konversi ke Map dan gunakan Firestore Timestamp
     Map<String, dynamic> postData = post.toJson();
-    postData['date'] = FieldValue.serverTimestamp(); // Gunakan Firestore Timestamp
-    log(postData.toString());
 
-    // try {
-    //   await FirebaseFirestore.instance.collection('post').add(postData);
-    //   print("Postingan berhasil dikirim!");
-    // } catch (e) {
-    //   print("Error posting: $e");
-    // }
+    try {
+      await FirebaseFirestore.instance.collection('post').add(postData);
+      Get.back();
+    } catch (e) {}
   }
 }

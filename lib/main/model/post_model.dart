@@ -1,17 +1,19 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Post {
   final String username;
   final String email;
   final String profile;
-  final List<String> imageList;
+  final List<String> image;
   final String desc;
-  final String date;
+  final Timestamp date;
   final List<String> like;
 
   Post({
     required this.username,
     required this.email,
     required this.profile,
-    required this.imageList,
+    required this.image,
     required this.desc,
     required this.date,
     required this.like,
@@ -22,7 +24,7 @@ class Post {
       username: json['username'],
       email: json['email'],
       profile: json['profile'],
-      imageList: List<String>.from(json['imageList'] ?? []),
+      image: List<String>.from(json['image'] ?? []),
       desc: json['desc'],
       date: json['date'],
       like: List<String>.from(json['like'] ?? []),
@@ -34,7 +36,7 @@ class Post {
       'username': username,
       'email': email,
       'profile': profile,
-      'imageList': imageList,
+      'image': image,
       'desc': desc,
       'date': date,
       'like': like,

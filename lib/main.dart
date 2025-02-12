@@ -43,11 +43,7 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Image.asset(
-          Img.okayu,
-        ),
-      ),
+      backgroundColor: Colors.black,
     );
   }
 }

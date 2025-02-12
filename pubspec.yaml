@@ -46,3 +46,11 @@ flutter:
 
   assets:
     - assets/
+
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: assets/elaelaela.jpg
+
+  android_12:
+    image: assets/elaelaela.jpg
+    icon_background_color: "#FFFFFF"

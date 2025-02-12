@@ -78,7 +78,10 @@ class EditProfileGetx extends GetxController {
               ),
               W.gap(height: 8),
               W.button(
-                onPressed: () => pickImage(ImageSource.gallery),
+                onPressed: () {
+                  Get.back();
+                  pickImage(ImageSource.gallery);
+                },
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(vertical: 12),
                 child: Row(
@@ -99,7 +102,10 @@ class EditProfileGetx extends GetxController {
               ),
               W.gap(height: 5),
               W.button(
-                onPressed: () => pickImage(ImageSource.camera),
+                onPressed: () {
+                  Get.back();
+                  pickImage(ImageSource.camera);
+                },
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(vertical: 12),
                 child: Row(
