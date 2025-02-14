@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:kovalskia/main/class.dart';
 import 'package:kovalskia/main/config.dart';
 import 'package:kovalskia/main/main_widget.dart';
@@ -18,6 +19,13 @@ class MainFunction {
     var bytes = utf8.encode(value);
     var string = md5.convert(bytes);
     return string.toString();
+  }
+
+  String format({
+    required String format,
+    required DateTime time,
+  }) {
+    return DateFormat(format).format(time);
   }
 
   void log(dynamic value) => developer.log(value.toString());
@@ -97,6 +105,7 @@ class MainFunction {
 
   void loading() {
     Get.dialog(
+      barrierDismissible: false,
       Dialog(
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(

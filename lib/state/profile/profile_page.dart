@@ -6,6 +6,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:kovalskia/main/class.dart';
 import 'package:kovalskia/main/config.dart';
 import 'package:kovalskia/main/main_widget.dart';
+import 'package:kovalskia/main/model/post_model.dart';
 import 'package:kovalskia/state/login/login_page.dart';
 import 'package:kovalskia/state/profile/profile_getx.dart';
 
@@ -36,12 +37,9 @@ class ProfilePage extends StatelessWidget {
             ),
           ),
           IconButton(
-            onPressed: () {
-              GetStorage().remove(Config.user);
-              Get.offAll(() => LoginPage());
-            },
+            onPressed: get.logoutValidation,
             icon: Icon(
-              Icons.menu,
+              Icons.logout,
             ),
           ),
         ],
@@ -96,9 +94,11 @@ class ProfilePage extends StatelessWidget {
                                     text: 'Postingan',
                                     fontSize: 12,
                                   ),
-                                  W.text(
-                                    text: '0',
-                                    fontSize: 12,
+                                  Obx(
+                                    () => W.text(
+                                      text: get.length.value.toString(),
+                                      fontSize: 12,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -108,9 +108,11 @@ class ProfilePage extends StatelessWidget {
                                     text: 'Pengikut',
                                     fontSize: 12,
                                   ),
-                                  W.text(
-                                    text: '0',
-                                    fontSize: 12,
+                                  Obx(
+                                    () => W.text(
+                                      text: get.user.value.follower.length.toString(),
+                                      fontSize: 12,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -120,9 +122,11 @@ class ProfilePage extends StatelessWidget {
                                     text: 'Mengikuti',
                                     fontSize: 12,
                                   ),
-                                  W.text(
-                                    text: '0',
-                                    fontSize: 12,
+                                  Obx(
+                                    () => W.text(
+                                      text: get.user.value.follow.length.toString(),
+                                      fontSize: 12,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -178,6 +182,23 @@ class ProfilePage extends StatelessWidget {
           Divider(
             height: 1,
             color: Colors.black,
+          ),
+          Expanded(
+            child: Obx(
+              () => GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                ),
+                itemCount: get.postList.length,
+                itemBuilder: (context, index) {
+                  Post data = get.postList[index];
+                  return Image.memory(
+                    base64Decode(data.image[0]),
+                    fit: BoxFit.cover,
+                  );
+                },
+              ),
+            ),
           ),
         ],
       ),

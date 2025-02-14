@@ -24,7 +24,17 @@ class HomePage extends StatelessWidget {
           unselectedItemColor: Colors.black,
           items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: Icon(
+                Icons.home,
+                color: Colors.black,
+              ),
+              label: '',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.search,
+                color: Colors.black,
+              ),
               label: '',
             ),
             BottomNavigationBarItem(
@@ -35,7 +45,10 @@ class HomePage extends StatelessWidget {
               label: '',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person),
+              icon: Icon(
+                Icons.person,
+                color: Colors.black,
+              ),
               label: '',
             ),
           ],

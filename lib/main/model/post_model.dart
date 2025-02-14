@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Post {
+  final String? id;
   final String username;
   final String email;
   final String profile;
@@ -10,6 +11,7 @@ class Post {
   final List<String> like;
 
   Post({
+    this.id,
     required this.username,
     required this.email,
     required this.profile,
@@ -21,6 +23,7 @@ class Post {
 
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
+      id: json['id'],
       username: json['username'],
       email: json['email'],
       profile: json['profile'],
@@ -33,6 +36,7 @@ class Post {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'username': username,
       'email': email,
       'profile': profile,

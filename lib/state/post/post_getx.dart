@@ -18,7 +18,7 @@ class PostGetx extends GetxController {
   TextEditingController desc = TextEditingController();
 
   RxList<String> imageList = <String>[].obs;
-  RxInt indexImage = 0.obs;
+  RxInt indexImage = 1.obs;
 
   late Rx<User> user = User.fromJson(box.read(Config.user)).obs;
 
@@ -27,6 +27,8 @@ class PostGetx extends GetxController {
     init();
     super.onInit();
   }
+
+  void back() => Get.back(result: true);
 
   void init() async {
     await Future.delayed(const Duration(microseconds: 1));
@@ -75,6 +77,11 @@ class PostGetx extends GetxController {
       return;
     }
 
+    if (desc.text.length <= 9) {
+      C.bottomSheetEla(subtitle: 'Deskripsi Terlalu Pendek');
+      return;
+    }
+
     User u = user.value;
 
     Post post = Post(
@@ -90,8 +97,12 @@ class PostGetx extends GetxController {
     Map<String, dynamic> postData = post.toJson();
 
     try {
+      C.loading();
       await FirebaseFirestore.instance.collection('post').add(postData);
+      Get.close(2);
+    } catch (e) {
       Get.back();
-    } catch (e) {}
+      C.bottomSheetEla(subtitle: 'Gagal Upload Postingan');
+    }
   }
 }

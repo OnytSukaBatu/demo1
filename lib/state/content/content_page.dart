@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kovalskia/main/class.dart';
+import 'package:kovalskia/main/main_function.dart';
 import 'package:kovalskia/main/main_widget.dart';
 import 'package:kovalskia/main/model/post_model.dart';
 import 'package:kovalskia/state/content/content_getx.dart';
@@ -25,23 +26,20 @@ class ContentPage extends StatelessWidget {
             fontSize: 32,
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.email),
-          ),
-        ],
       ),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
             get.init();
           },
+          backgroundColor: Colors.white,
+          color: Colors.black,
           child: Obx(
             () => ListView.builder(
               itemCount: get.postList.length,
               itemBuilder: (context, index) {
                 final Post post = get.postList[index];
+                RxList like = get.postList[index].like.obs;
                 return Container(
                   color: Colors.white,
                   child: Column(
@@ -51,17 +49,20 @@ class ContentPage extends StatelessWidget {
                         padding: const EdgeInsets.all(8),
                         child: Row(
                           children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.black,
+                            GestureDetector(
+                              onTap: () => get.seeProfile(post.email),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.black,
+                                  ),
+                                  shape: BoxShape.circle,
                                 ),
-                                shape: BoxShape.circle,
-                              ),
-                              child: CircleAvatar(
-                                child: ClipOval(
-                                  child: Image.memory(
-                                    base64Decode(post.profile),
+                                child: CircleAvatar(
+                                  child: ClipOval(
+                                    child: Image.memory(
+                                      base64Decode(post.profile),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -83,7 +84,10 @@ class ContentPage extends StatelessWidget {
                             ),
                             const Spacer(),
                             InkWell(
-                              onTap: () {},
+                              onTap: () => get.menuPost(
+                                post.id,
+                                post.email,
+                              ),
                               child: Icon(Icons.more_vert),
                             ),
                             W.gap(width: 8),
@@ -117,23 +121,26 @@ class ContentPage extends StatelessWidget {
                         child: Row(
                           children: [
                             InkWell(
-                              onTap: () {},
-                              child: Icon(
-                                Icons.favorite,
+                              onTap: () => get.doLike(post.id!, like),
+                              child: Obx(
+                                () => Icon(
+                                  like.contains(get.user.email) ? Icons.favorite : Icons.favorite_outline,
+                                  color: like.contains(get.user.email) ? Colors.red : Colors.black,
+                                ),
                               ),
                             ),
                             W.gap(width: 8),
                             InkWell(
-                              onTap: () {},
+                              onTap: get.openComment,
                               child: Icon(
                                 Icons.comment,
                               ),
                             ),
                             const Spacer(),
-                            InkWell(
-                              onTap: () {},
-                              child: Icon(
-                                Icons.bookmark,
+                            W.text(
+                              text: C.format(
+                                format: 'dd MMM yyyy',
+                                time: post.date.toDate(),
                               ),
                             ),
                           ],

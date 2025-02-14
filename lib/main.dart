@@ -43,7 +43,7 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
     );
   }
 }
@@ -58,7 +58,7 @@ class MainGetx extends GetxController {
   }
 
   void init() async {
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(microseconds: 1));
     Map? init;
     init = box.read(Config.user) ?? {};
     if (init.isNotEmpty) {

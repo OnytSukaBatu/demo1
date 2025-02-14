@@ -17,7 +17,7 @@ class PostPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(
-          onPressed: Get.back,
+          onPressed: get.back,
           icon: Icon(
             Icons.arrow_back,
             color: Colors.black,
@@ -99,23 +99,28 @@ class PostPage extends StatelessWidget {
                     controller: get.desc,
                     hintText: 'Deskripsi',
                     fontSize: 12,
-                    focusedBorder: OutlineInputBorder(),
-                  ),
-                  W.gap(height: 8),
-                  W.button(
-                    onPressed: get.post,
-                    width: double.infinity,
-                    backgroundColor: Colors.black,
-                    borderRadius: BorderRadius.circular(5),
-                    child: W.text(
-                      text: 'Posting',
-                      color: Colors.white,
-                    ),
+                    focusedBorder: InputBorder.none,
                   ),
                 ],
               ),
             ),
           ],
+        ),
+      ),
+      bottomNavigationBar: Container(
+        color: Colors.grey[100],
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: W.button(
+            onPressed: get.post,
+            width: double.infinity,
+            backgroundColor: Colors.black,
+            borderRadius: BorderRadius.circular(5),
+            child: W.text(
+              text: 'Posting',
+              color: Colors.white,
+            ),
+          ),
         ),
       ),
     );
