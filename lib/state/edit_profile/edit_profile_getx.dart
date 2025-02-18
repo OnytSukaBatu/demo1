@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kovalskia/main/class.dart';
@@ -15,25 +14,15 @@ import 'package:kovalskia/main/model/user_model.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class EditProfileGetx extends GetxController {
-  GetStorage box = GetStorage();
-
-  late User user = User.fromJson(box.read(Config.user));
+  late User user = User.fromJson(C.box.read(Config.user));
   late TextEditingController username = TextEditingController(text: user.username), desc = TextEditingController(text: user.desc);
   late RxString profile = user.profile.obs;
 
   void pickImage(ImageSource imageSource) async {
     PermissionStatus status = await Permission.storage.status;
-    if (status.isDenied) {
-      if (await Permission.storage.request().isDenied) {
-        C.bottomSheetEla(subtitle: 'Izin Penyimpanan Ditolak');
-        return;
-      }
-    }
 
-    if (status.isPermanentlyDenied) {
-      C.bottomSheetEla(subtitle: 'Izin Penyimpanan Ditolak Permanen!');
-      return;
-    }
+    if (status.isDenied) if (await Permission.storage.request().isDenied) return C.bottomSheetEla(subtitle: 'Izin Penyimpanan Ditolak');
+    if (status.isPermanentlyDenied) return C.bottomSheetEla(subtitle: 'Izin Penyimpanan Ditolak Permanen!');
 
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: imageSource);

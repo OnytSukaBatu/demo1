@@ -83,9 +83,7 @@ class PostdetailPage extends StatelessWidget {
                 children: List.generate(
                   get.post.image.length,
                   (index) => InkWell(
-                    onTap: () => get.checkImage(
-                      image: get.post.image[index],
-                    ),
+                    onTap: () => get.checkImage(get.post.image[index]),
                     child: Image.memory(
                       base64Decode(get.post.image[index]),
                       fit: BoxFit.cover,
@@ -102,11 +100,11 @@ class PostdetailPage extends StatelessWidget {
               child: Row(
                 children: [
                   InkWell(
-                    onTap: () => get.doLike(get.post.id!, get.rxlike),
+                    onTap: () => get.doLike(get.post.id!, get.like),
                     child: Obx(
                       () => Icon(
-                        get.rxlike.contains(get.user.email) ? Icons.favorite : Icons.favorite_outline,
-                        color: get.rxlike.contains(get.user.email) ? Colors.red : Colors.black,
+                        get.like.contains(get.user.email) ? Icons.favorite : Icons.favorite_outline,
+                        color: get.like.contains(get.user.email) ? Colors.red : Colors.black,
                       ),
                     ),
                   ),

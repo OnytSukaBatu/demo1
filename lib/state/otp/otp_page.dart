@@ -41,7 +41,7 @@ class OtpPage extends StatelessWidget {
                 width: 40,
                 borderColor: Colors.grey,
                 focusedBorderColor: Colors.black,
-                onCompleted: get.onCompleted,
+                onCompleted: get.onSubmit,
               ),
               W.gap(height: 32),
               Row(
@@ -55,7 +55,7 @@ class OtpPage extends StatelessWidget {
                   W.gap(width: 5),
                   Obx(
                     () => W.text(
-                      text: get.time.value,
+                      text: get.timeString.value,
                       fontWeight: FontWeight.bold,
                       fontSize: 12,
                       color: Colors.black,

@@ -10,9 +10,9 @@ class ForgotGetx extends GetxController {
   TextEditingController email = TextEditingController(), otp = TextEditingController(), password = TextEditingController(), confirm = TextEditingController();
 
   RxString time = ''.obs;
+  RxString userId = ''.obs;
   RxInt phase = 0.obs;
-  String userID = '';
-  int timer = 300;
+  RxInt timer = 300.obs;
 
   late Timer otpKadaluarsa;
 
@@ -24,32 +24,31 @@ class ForgotGetx extends GetxController {
   }
 
   void lanjut() async {
-    if (timer == 0) {
-      C.bottomSheetEla(subtitle: 'OTP Kadaluarsa!');
-      return;
-    }
+    if (timer.value == 0) return C.bottomSheetEla(subtitle: 'OTP Kadaluarsa!');
 
     C.loading();
     switch (phase.value) {
       case 0:
         if (!email.text.contains('@gmail.com')) {
-          Get.back();
+          Get.close(1);
           C.bottomSheetEla(subtitle: '${email.text} tidak ditemukan!');
           break;
         }
 
         final snapshot = await FirebaseFirestore.instance.collection('user').where('email', isEqualTo: email.text).get();
         if (snapshot.docs.isEmpty) {
-          Get.back();
+          Get.close(1);
           C.bottomSheetEla(subtitle: '${email.text} tidak terdaftar!');
           break;
         }
 
-        userID = snapshot.docs.first.id;
-        EmailOTP.sendOTP(email: email.text);
-        startTime();
-        email.clear();
+        userId.value = snapshot.docs.first.id;
         phase.value = 1;
+
+        EmailOTP.sendOTP(email: email.text);
+        email.clear();
+        startTime();
+
         Get.back();
         break;
       case 1:
@@ -74,7 +73,7 @@ class ForgotGetx extends GetxController {
         }
 
         String newPassword = C.stringMD5(value: password.text);
-        await FirebaseFirestore.instance.collection('user').doc(userID).update({
+        await FirebaseFirestore.instance.collection('user').doc(userId.value).update({
           'password': newPassword,
         });
 
@@ -92,13 +91,13 @@ class ForgotGetx extends GetxController {
     otpKadaluarsa = Timer.periodic(
       const Duration(seconds: 1),
       (_) {
-        switch (timer) {
+        switch (timer.value) {
           case == 0:
             otpKadaluarsa.cancel();
-            time.value = format(timer);
+            time.value = format(timer.value);
           default:
-            timer--;
-            time.value = format(timer);
+            timer.value--;
+            time.value = format(timer.value);
         }
       },
     );

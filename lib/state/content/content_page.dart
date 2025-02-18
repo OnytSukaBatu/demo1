@@ -59,11 +59,19 @@ class ContentPage extends StatelessWidget {
                                   shape: BoxShape.circle,
                                 ),
                                 child: CircleAvatar(
-                                  child: ClipOval(
-                                    child: Image.memory(
-                                      base64Decode(post.profile),
-                                    ),
-                                  ),
+                                  backgroundColor: Colors.grey[200],
+                                  child: post.profile.isEmpty
+                                      ? Center(
+                                          child: Icon(
+                                            Icons.person,
+                                            color: Colors.black,
+                                          ),
+                                        )
+                                      : ClipOval(
+                                          child: Image.memory(
+                                            base64Decode(post.profile),
+                                          ),
+                                        ),
                                 ),
                               ),
                             ),
@@ -131,7 +139,7 @@ class ContentPage extends StatelessWidget {
                             ),
                             W.gap(width: 8),
                             InkWell(
-                              onTap: get.openComment,
+                              onTap: () => get.openComment(id: post.id!),
                               child: Icon(
                                 Icons.comment,
                               ),

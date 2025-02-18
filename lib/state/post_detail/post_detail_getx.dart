@@ -1,32 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:kovalskia/main/class.dart';
 import 'package:kovalskia/main/config.dart';
+import 'package:kovalskia/main/main_function.dart';
 import 'package:kovalskia/main/main_widget.dart';
 import 'package:kovalskia/main/model/post_model.dart';
 import 'package:kovalskia/main/model/user_model.dart';
 import 'package:kovalskia/state/image/image_page.dart';
 
 class PostDetailGetx extends GetxController {
-  GetStorage box = GetStorage();
-  late User user = User.fromJson(box.read(Config.user));
+  late User user = User.fromJson(C.box.read(Config.user));
   Post post = Get.arguments;
-
-  void checkImage({
-    required String image,
-  }) {
-    Get.to(() => ImagePage(), arguments: image);
-  }
-
-  RxList rxlike = [].obs;
+  RxList like = [].obs;
 
   @override
   void onInit() {
-    rxlike.value = post.like;
+    like.value = post.like;
     super.onInit();
   }
+
+  void checkImage(String image) => Get.to(() => ImagePage(), arguments: image);
 
   void menuPost() {
     Get.bottomSheet(

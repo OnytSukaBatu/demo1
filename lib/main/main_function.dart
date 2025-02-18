@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:kovalskia/main/class.dart';
 import 'package:kovalskia/main/config.dart';
@@ -14,6 +15,8 @@ MainFunction get C => MainFunction._();
 class MainFunction {
   factory MainFunction() => MainFunction._();
   MainFunction._();
+
+  GetStorage box = GetStorage();
 
   String stringMD5({required String value}) {
     var bytes = utf8.encode(value);
@@ -34,7 +37,7 @@ class MainFunction {
     double height = 175,
     String title = 'Terjadi Kesalahan',
     String subtitle = 'Silahkan Coba Lagi!',
-    bool showEla = true,
+    bool showEla = false,
   }) {
     Get.bottomSheet(
       isDismissible: false,

@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:kovalskia/main/config.dart';
 import 'package:kovalskia/main/main_function.dart';
 import 'package:kovalskia/main/model/user_model.dart';
@@ -12,14 +11,12 @@ import 'package:kovalskia/state/profile/profile_page.dart';
 import 'package:kovalskia/state/seacrh/search_page.dart';
 
 class HomeGetx extends GetxController {
-  GetStorage box = GetStorage();
-  late User user = User.fromJson(box.read(Config.user));
+  late User user = User.fromJson(C.box.read(Config.user));
 
   RxInt index = 0.obs;
-
   RxList page = [
     ContentPage(),
-    SeacrhPage(),
+    SearchPage(),
     SizedBox(),
     ProfilePage(),
   ].obs;
@@ -27,10 +24,7 @@ class HomeGetx extends GetxController {
   void navigate(int value) {
     switch (value) {
       case == 2:
-        if (Get.find<ProfileGetx>().length.value >= 9) {
-          C.bottomSheetEla(subtitle: 'Telah Mencapai Batas Posting');
-          return;
-        }
+        if (Get.find<ProfileGetx>().length.value >= 9) return C.bottomSheetEla(subtitle: 'Telah Mencapai Batas Posting');
         Get.to(() => PostPage())?.then((T) {
           if (T ?? false) return;
           Get.find<ContentGetx>().init();

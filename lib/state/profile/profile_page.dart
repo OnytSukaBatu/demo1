@@ -2,12 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:kovalskia/main/class.dart';
-import 'package:kovalskia/main/config.dart';
 import 'package:kovalskia/main/main_widget.dart';
 import 'package:kovalskia/main/model/post_model.dart';
-import 'package:kovalskia/state/login/login_page.dart';
 import 'package:kovalskia/state/profile/profile_getx.dart';
 
 class ProfilePage extends StatelessWidget {

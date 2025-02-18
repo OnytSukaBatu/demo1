@@ -4,20 +4,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_otp/email_otp.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:kovalskia/main/config.dart';
 import 'package:kovalskia/main/main_function.dart';
 import 'package:kovalskia/main/model/user_model.dart';
 import 'package:kovalskia/state/home/home_page.dart';
 
 class OtpGetx extends GetxController {
-  GetStorage box = GetStorage();
-
   TextEditingController controller = TextEditingController();
-
   User user = Get.arguments;
-  RxString time = '5:00'.obs;
-  int timer = 300;
+
+  RxString timeString = '5:00'.obs;
+  RxInt timer = 300.obs;
 
   late Timer otpKadaluarsa;
 
@@ -43,39 +40,35 @@ class OtpGetx extends GetxController {
     otpKadaluarsa = Timer.periodic(
       const Duration(seconds: 1),
       (_) {
-        switch (timer) {
+        switch (timer.value) {
           case == 0:
             otpKadaluarsa.cancel();
-            time.value = format(timer);
+            timeString.value = format(timer.value);
           default:
-            timer--;
-            time.value = format(timer);
+            timer.value--;
+            timeString.value = format(timer.value);
         }
       },
     );
+  }
+
+  void onSubmit(String? value) {
+    bool verify = EmailOTP.verifyOTP(otp: controller.text);
+
+    if (verify) return clear();
+
+    controller.clear();
+    C.bottomSheetEla(subtitle: 'Kode OTP salah!');
   }
 
   void clear() async {
     C.loading();
     Map<String, dynamic> data = user.toJson();
 
-    final firestore = FirebaseFirestore.instance;
-    await firestore.collection('user').add(data);
+    await FirebaseFirestore.instance.collection('user').add(data);
+    C.box.write(Config.user, data);
 
-    box.write(Config.user, data);
-    Get.back();
+    Get.close(1);
     Get.offAll(() => HomePage());
-  }
-
-  void onCompleted(String? value) {
-    bool verify = EmailOTP.verifyOTP(otp: controller.text);
-
-    if (verify) {
-      clear();
-      return;
-    } else {
-      controller.clear();
-      C.bottomSheetEla(subtitle: 'Kode OTP salah!');
-    }
   }
 }

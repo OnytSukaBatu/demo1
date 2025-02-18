@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:kovalskia/main/config.dart';
+import 'package:kovalskia/main/main_function.dart';
 import 'package:kovalskia/state/home/home_page.dart';
 import 'package:kovalskia/state/login/login_page.dart';
 
@@ -44,13 +45,16 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      body: Center(
+        child: Image.asset(
+          Img.okayu,
+        ),
+      ),
     );
   }
 }
 
 class MainGetx extends GetxController {
-  GetStorage box = GetStorage();
-
   @override
   void onInit() {
     init();
@@ -59,12 +63,15 @@ class MainGetx extends GetxController {
 
   void init() async {
     await Future.delayed(const Duration(microseconds: 1));
+
     Map? init;
-    init = box.read(Config.user) ?? {};
+    init = C.box.read(Config.user) ?? {};
+
     if (init.isNotEmpty) {
       Get.off(() => HomePage());
-    } else {
-      Get.off(() => LoginPage());
+      return;
     }
+
+    Get.off(() => LoginPage());
   }
 }

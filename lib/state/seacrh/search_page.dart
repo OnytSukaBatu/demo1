@@ -6,8 +6,8 @@ import 'package:kovalskia/main/main_widget.dart';
 import 'package:kovalskia/main/model/user_model.dart';
 import 'package:kovalskia/state/seacrh/search_getx.dart';
 
-class SeacrhPage extends StatelessWidget {
-  SeacrhPage({super.key});
+class SearchPage extends StatelessWidget {
+  SearchPage({super.key});
 
   final SearchGetx get = Get.put(SearchGetx());
 
