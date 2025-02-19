@@ -17,7 +17,7 @@ class PostdetailPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: Get.back,
+          onPressed: get.back,
           icon: Icon(
             Icons.arrow_back,
             color: Colors.black,
@@ -68,7 +68,10 @@ class PostdetailPage extends StatelessWidget {
                   ),
                   const Spacer(),
                   InkWell(
-                    onTap: get.menuPost,
+                    onTap: () => get.menuPost(
+                      get.post.email,
+                      get.post.id!,
+                    ),
                     child: Icon(Icons.more_vert),
                   ),
                   W.gap(width: 8),
@@ -110,7 +113,7 @@ class PostdetailPage extends StatelessWidget {
                   ),
                   W.gap(width: 8),
                   InkWell(
-                    onTap: () {},
+                    onTap: () => get.openComment(id: get.post.id!),
                     child: Icon(
                       Icons.comment,
                     ),

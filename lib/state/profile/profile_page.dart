@@ -189,9 +189,12 @@ class ProfilePage extends StatelessWidget {
                 itemCount: get.postList.length,
                 itemBuilder: (context, index) {
                   Post data = get.postList[index];
-                  return Image.memory(
-                    base64Decode(data.image[0]),
-                    fit: BoxFit.cover,
+                  return GestureDetector(
+                    onTap: () => get.postDetail(data),
+                    child: Image.memory(
+                      base64Decode(data.image[0]),
+                      fit: BoxFit.cover,
+                    ),
                   );
                 },
               ),

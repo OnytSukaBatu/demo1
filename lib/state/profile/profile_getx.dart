@@ -13,18 +13,18 @@ import 'package:kovalskia/state/image/image_page.dart';
 import 'package:kovalskia/state/login/login_page.dart';
 import 'package:kovalskia/state/post/post_page.dart';
 import 'package:kovalskia/state/content/content_getx.dart';
+import 'package:kovalskia/state/post_detail/post_detail_page.dart';
 
 class ProfileGetx extends GetxController {
-  GetStorage box = GetStorage();
   RxInt length = 0.obs;
   RxList<Post> postList = <Post>[].obs;
 
-  late Rx<User> user = User.fromJson(box.read(Config.user)).obs;
+  Rx<User> user = User.fromJson(C.box.read(Config.user)).obs;
 
   @override
   void onInit() {
     init();
-    initUser();
+    // initUser();
     getLength();
     super.onInit();
   }
@@ -37,8 +37,8 @@ class ProfileGetx extends GetxController {
 
   void updateFirebase() async {
     var snapshot = await FirebaseFirestore.instance.collection('user').where('email', isEqualTo: user.value.email).get();
-    box.write(Config.user, snapshot.docs.first.data());
-    user.value = User.fromJson(box.read(Config.user));
+    C.box.write(Config.user, snapshot.docs.first.data());
+    user.value = User.fromJson(C.box.read(Config.user));
   }
 
   Future<void> init() async {
@@ -48,12 +48,12 @@ class ProfileGetx extends GetxController {
     return;
   }
 
-  void initUser() async {
-    await Future.delayed(const Duration(microseconds: 1));
-    Map<String, dynamic> userData = box.read(Config.user);
-    user.value = User.fromJson(userData);
-    user.refresh();
-  }
+  // void initUser() async {
+  //   await Future.delayed(const Duration(microseconds: 1));
+  //   Map<String, dynamic> userData = C.box.read(Config.user);
+  //   user.value = User.fromJson(userData);
+  //   user.refresh();
+  // }
 
   void post() {
     if (length.value >= 9) {
@@ -164,4 +164,21 @@ class ProfileGetx extends GetxController {
     posts.sort((a, b) => b.date.compareTo(a.date));
     return posts;
   }
+
+  void refreshProfile() async {
+    QuerySnapshot<Map<String, dynamic>>? userQ;
+    userQ = await FirebaseFirestore.instance.collection('user').where('email', isEqualTo: user.value.email).get();
+    user.value = User.fromJson(userQ.docs.first.data());
+    C.box.write(Config.user, user.toJson());
+  }
+
+  void postDetail(Post post) => Get.to(() => PostdetailPage(), arguments: post)?.then(
+        (T) {
+          if (T) {
+            init();
+            Get.find<ContentGetx>().init();
+            C.log(T);
+          }
+        },
+      );
 }

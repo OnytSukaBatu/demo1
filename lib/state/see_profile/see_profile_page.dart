@@ -168,7 +168,7 @@ class SeeProfilePage extends StatelessWidget {
                           return GestureDetector(
                             onTap: () => get.postDetail(data),
                             child: Image.memory(
-                              base64Decode(data.image[0]),
+                              base64Decode(data.image[index]),
                               fit: BoxFit.cover,
                             ),
                           );

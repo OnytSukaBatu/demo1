@@ -50,7 +50,9 @@ class ContentPage extends StatelessWidget {
                         child: Row(
                           children: [
                             GestureDetector(
-                              onTap: () => get.seeProfile(post.email),
+                              onTap: () {
+                                get.seeProfile(email: post.email);
+                              },
                               child: Container(
                                 decoration: BoxDecoration(
                                   border: Border.all(
@@ -92,10 +94,12 @@ class ContentPage extends StatelessWidget {
                             ),
                             const Spacer(),
                             InkWell(
-                              onTap: () => get.menuPost(
-                                post.id,
-                                post.email,
-                              ),
+                              onTap: () {
+                                get.menuPost(
+                                  id: post.id!,
+                                  email: post.email,
+                                );
+                              },
                               child: Icon(Icons.more_vert),
                             ),
                             W.gap(width: 8),
@@ -110,9 +114,9 @@ class ContentPage extends StatelessWidget {
                           children: List.generate(
                             post.image.length,
                             (index) => InkWell(
-                              onTap: () => get.checkImage(
-                                image: post.image[index],
-                              ),
+                              onTap: () {
+                                get.checkImage(image: post.image[index]);
+                              },
                               child: Image.memory(
                                 base64Decode(post.image[index]),
                                 fit: BoxFit.cover,
@@ -129,7 +133,12 @@ class ContentPage extends StatelessWidget {
                         child: Row(
                           children: [
                             InkWell(
-                              onTap: () => get.doLike(post.id!, like),
+                              onTap: () {
+                                get.doLike(
+                                  id: post.id!,
+                                  listLike: like,
+                                );
+                              },
                               child: Obx(
                                 () => Icon(
                                   like.contains(get.user.email) ? Icons.favorite : Icons.favorite_outline,

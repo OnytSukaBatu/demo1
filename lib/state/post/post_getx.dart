@@ -10,6 +10,8 @@ import 'package:kovalskia/main/config.dart';
 import 'package:kovalskia/main/main_function.dart';
 import 'package:kovalskia/main/model/post_model.dart';
 import 'package:kovalskia/main/model/user_model.dart';
+import 'package:kovalskia/state/content/content_getx.dart';
+import 'package:kovalskia/state/profile/profile_getx.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class PostGetx extends GetxController {
@@ -99,6 +101,10 @@ class PostGetx extends GetxController {
     try {
       C.loading();
       await FirebaseFirestore.instance.collection('post').add(postData);
+      await Future.delayed(const Duration(seconds: 1));
+      Get.find<ContentGetx>().init();
+      Get.find<ProfileGetx>().init();
+      Get.find<ProfileGetx>().getLength();
       Get.close(2);
     } catch (e) {
       Get.back();

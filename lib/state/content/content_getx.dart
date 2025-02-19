@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:kovalskia/main/class.dart';
 import 'package:kovalskia/main/config.dart';
 import 'package:kovalskia/main/main_function.dart';
@@ -11,31 +10,16 @@ import 'package:kovalskia/main/main_widget.dart';
 import 'package:kovalskia/main/model/comment_model.dart';
 import 'package:kovalskia/main/model/post_model.dart';
 import 'package:kovalskia/main/model/user_model.dart';
+import 'package:kovalskia/state/home/home_getx.dart';
 import 'package:kovalskia/state/image/image_page.dart';
 import 'package:kovalskia/state/profile/profile_getx.dart';
 import 'package:kovalskia/state/see_profile/see_profile_page.dart';
 
 class ContentGetx extends GetxController {
-  GetStorage box = GetStorage();
-  late User user = User.fromJson(box.read(Config.user));
-
   TextEditingController comment = TextEditingController();
+  User user = User.fromJson(C.box.read(Config.user));
 
   RxList<Post> postList = <Post>[].obs;
-
-  Future<List<Post>> getData() async {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('post').orderBy('date', descending: true).limit(10).get();
-
-    List<Post> posts = querySnapshot.docs.map((doc) {
-      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-      String id = doc.id;
-      data['id'] = id;
-      Post post = Post.fromJson(data);
-      return post;
-    }).toList();
-
-    return posts;
-  }
 
   @override
   void onInit() {
@@ -48,22 +32,21 @@ class ContentGetx extends GetxController {
     postList.refresh();
   }
 
-  void checkImage({
-    required String image,
-  }) {
+  void checkImage({required String image}) {
     Get.to(() => ImagePage(), arguments: image);
   }
 
-  void delete({
-    required String id,
-  }) async {
+  void delete({required String id}) async {
     C.loading();
     await FirebaseFirestore.instance.collection('post').doc(id).delete();
     Get.back();
     init();
   }
 
-  void menuPost(String? id, String email) {
+  void menuPost({
+    required String id,
+    required String email,
+  }) {
     Get.bottomSheet(
       Container(
         color: Colors.white,
@@ -72,38 +55,21 @@ class ContentGetx extends GetxController {
           child: Column(
             mainAxisSize: Ms.min,
             children: [
-              W.button(
-                width: double.infinity,
-                borderRadius: BorderRadius.circular(5),
-                onPressed: Get.back,
-                side: BorderSide(color: Colors.transparent),
-                child: W.text(
-                  text: 'Laporkan Postingan',
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red,
-                ),
-              ),
               Visibility(
                 visible: user.email == email,
-                child: Column(
-                  children: [
-                    W.gap(height: 5),
-                    W.button(
-                      onPressed: () {
-                        Get.back();
-                        if (id == null) return;
-                        delete(id: id);
-                      },
-                      width: double.infinity,
-                      borderRadius: BorderRadius.circular(5),
-                      side: BorderSide(color: Colors.transparent),
-                      child: W.text(
-                        text: 'Hapus Postingan',
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
+                child: W.button(
+                  onPressed: () {
+                    Get.back();
+                    delete(id: id);
+                  },
+                  width: double.infinity,
+                  borderRadius: BorderRadius.circular(5),
+                  side: BorderSide(color: Colors.transparent),
+                  child: W.text(
+                    text: 'Hapus Postingan',
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
               ),
               W.gap(height: 5),
@@ -125,11 +91,11 @@ class ContentGetx extends GetxController {
     );
   }
 
-  void doLike(
-    String id,
-    RxList listLike,
-  ) async {
-    DocumentReference post = FirebaseFirestore.instance.collection('post').doc(id);
+  void doLike({
+    required String id,
+    required RxList listLike,
+  }) async {
+    var post = FirebaseFirestore.instance.collection('post').doc(id);
     if (!listLike.contains(user.email)) {
       listLike.add(user.email);
       await post.update({
@@ -144,8 +110,8 @@ class ContentGetx extends GetxController {
   }
 
   void openComment({required String id}) async {
-    RxList<Comment> data = <Comment>[].obs;
     RxBool loading = true.obs;
+    RxList<Comment> data = <Comment>[].obs;
     comment.clear();
 
     Get.bottomSheet(
@@ -189,11 +155,18 @@ class ContentGetx extends GetxController {
                             Comment indexData = data[index];
                             return ListTile(
                               leading: CircleAvatar(
-                                child: ClipOval(
-                                  child: Image.memory(
-                                    base64Decode(indexData.profile),
-                                  ),
-                                ),
+                                child: indexData.profile.isEmpty
+                                    ? Center(
+                                        child: Icon(
+                                          Icons.person,
+                                          color: Colors.black,
+                                        ),
+                                      )
+                                    : ClipOval(
+                                        child: Image.memory(
+                                          base64Decode(indexData.profile),
+                                        ),
+                                      ),
                               ),
                               title: W.text(
                                 text: indexData.email,
@@ -264,22 +237,16 @@ class ContentGetx extends GetxController {
     loading.value = false;
   }
 
-  Future<List<Comment>> getDataComment(String id) async {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('comment').where('idContent', isEqualTo: id).get();
-    List<Comment> data = querySnapshot.docs.map((doc) {
-      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-      String id = doc.id;
-      data['id'] = id;
-      Comment post = Comment.formJson(data);
-      return post;
-    }).toList();
-    data.sort((a, b) => b.date.compareTo(a.date));
-    return data;
-  }
-
-  void seeProfile(String email) {
+  void seeProfile({required String email}) {
+    if (email == user.email) {
+      Get.find<HomeGetx>().index.value = 3;
+      return;
+    }
     Get.to(() => SeeProfilePage(), arguments: email)?.then((T) {
-      if (T) Get.find<ProfileGetx>().updateFirebase();
+      if (T) {
+        Get.find<ProfileGetx>().updateFirebase();
+        init();
+      }
     });
   }
 
@@ -295,5 +262,33 @@ class ContentGetx extends GetxController {
     C.loading();
     await FirebaseFirestore.instance.collection('comment').add(json);
     Get.close(1);
+  }
+
+  /* Function For Data */
+
+  Future<List<Post>> getData() async {
+    QuerySnapshot q = await FirebaseFirestore.instance.collection('post').orderBy('date', descending: true).limit(10).get();
+
+    List<Post> posts = q.docs.map((x) {
+      Map<String, dynamic> data = x.data() as Map<String, dynamic>;
+      data['id'] = x.id;
+      Post post = Post.fromJson(data);
+      return post;
+    }).toList();
+
+    return posts;
+  }
+
+  Future<List<Comment>> getDataComment(String id) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('comment').where('idContent', isEqualTo: id).get();
+    List<Comment> data = querySnapshot.docs.map((doc) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      String id = doc.id;
+      data['id'] = id;
+      Comment post = Comment.formJson(data);
+      return post;
+    }).toList();
+    data.sort((a, b) => b.date.compareTo(a.date));
+    return data;
   }
 }

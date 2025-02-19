@@ -40,36 +40,43 @@ class SearchPage extends StatelessWidget {
             ),
             Expanded(
               child: Obx(
-                () => ListView.builder(
-                  itemCount: get.listUser.length,
-                  itemBuilder: (context, index) {
-                    final User user = get.listUser[index];
-                    return ListTile(
-                      onTap: () => get.seeUser(user.email),
-                      leading: CircleAvatar(
-                        child: ClipOval(
-                          child: user.profile.isNotEmpty
-                              ? Image.memory(
-                                  base64Decode(user.profile),
-                                )
-                              : Icon(
-                                  Icons.person,
-                                  color: Colors.black,
-                                ),
+                () => get.loading.value
+                    ? Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.black,
+                          backgroundColor: Colors.transparent,
                         ),
+                      )
+                    : ListView.builder(
+                        itemCount: get.listUser.length,
+                        itemBuilder: (context, index) {
+                          final User user = get.listUser[index];
+                          return ListTile(
+                            onTap: () => get.seeUser(user.email),
+                            leading: CircleAvatar(
+                              child: ClipOval(
+                                child: user.profile.isNotEmpty
+                                    ? Image.memory(
+                                        base64Decode(user.profile),
+                                      )
+                                    : Icon(
+                                        Icons.person,
+                                        color: Colors.black,
+                                      ),
+                              ),
+                            ),
+                            title: W.text(
+                              text: user.username,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                            subtitle: W.text(
+                              text: user.email,
+                              fontSize: 10,
+                            ),
+                          );
+                        },
                       ),
-                      title: W.text(
-                        text: user.username,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                      ),
-                      subtitle: W.text(
-                        text: user.email,
-                        fontSize: 10,
-                      ),
-                    );
-                  },
-                ),
               ),
             ),
           ],

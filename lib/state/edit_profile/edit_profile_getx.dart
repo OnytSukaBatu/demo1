@@ -14,7 +14,7 @@ import 'package:kovalskia/main/model/user_model.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class EditProfileGetx extends GetxController {
-  late User user = User.fromJson(C.box.read(Config.user));
+  User user = User.fromJson(C.box.read(Config.user));
   late TextEditingController username = TextEditingController(text: user.username), desc = TextEditingController(text: user.desc);
   late RxString profile = user.profile.obs;
 

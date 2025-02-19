@@ -7,8 +7,10 @@ import 'package:kovalskia/state/see_profile/see_profile_page.dart';
 class SearchGetx extends GetxController {
   TextEditingController input = TextEditingController();
   RxList listUser = [].obs;
+  RxBool loading = false.obs;
 
   void search() async {
+    loading.value = true;
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection('user')
         .where('username', isGreaterThanOrEqualTo: input.text)
@@ -21,6 +23,7 @@ class SearchGetx extends GetxController {
 
     listUser.value = list;
     listUser.refresh();
+    loading.value = false;
   }
 
   void seeUser(String email) => Get.to(() => SeeProfilePage(), arguments: email);

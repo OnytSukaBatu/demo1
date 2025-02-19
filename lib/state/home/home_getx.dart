@@ -32,7 +32,11 @@ class HomeGetx extends GetxController {
           Get.find<ProfileGetx>().getLength();
         });
         break;
-
+      case == 3:
+        Get.find<ProfileGetx>().refreshProfile();
+        Get.find<ProfileGetx>().init();
+        index.value = value;
+        break;
       default:
         index.value = value;
         break;

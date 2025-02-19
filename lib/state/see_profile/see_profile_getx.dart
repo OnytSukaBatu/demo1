@@ -35,7 +35,11 @@ class SeeProfileGetx extends GetxController {
   }
 
   void back() => Get.back(result: isUpdate.value);
-  void postDetail(Post post) => Get.to(() => PostdetailPage(), arguments: post);
+  void postDetail(Post post) => Get.to(() => PostdetailPage(), arguments: post)?.then(
+        (T) {
+          if (T) isUpdate.value = true;
+        },
+      );
   void viewImage() => Get.to(() => ImagePage(), arguments: user.value.profile);
 
   void init() async {

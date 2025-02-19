@@ -57,21 +57,13 @@ class MainPage extends StatelessWidget {
 class MainGetx extends GetxController {
   @override
   void onInit() {
-    init();
+    WidgetsBinding.instance.addPostFrameCallback((_) => init());
     super.onInit();
   }
 
   void init() async {
-    await Future.delayed(const Duration(microseconds: 1));
-
-    Map? init;
-    init = C.box.read(Config.user) ?? {};
-
-    if (init.isNotEmpty) {
-      Get.off(() => HomePage());
-      return;
-    }
-
+    Map? init = C.box.read(Config.user) ?? {};
+    if (init.isNotEmpty) return Get.off(() => HomePage());
     Get.off(() => LoginPage());
   }
 }
